@@ -23,6 +23,19 @@ const theme = extendTheme({
         }, // Normally, it is "semibold"
       },
     },
+    Drawer: {
+      variants: {
+        alwaysOpen: {
+          parts: ['dialog, dialogContainer'],
+          dialog: {
+            pointerEvents: 'auto',
+          },
+          dialogContainer: {
+            pointerEvents: 'none',
+          },
+        },
+      },
+    },
   },
 })
 

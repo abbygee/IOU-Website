@@ -1,7 +1,7 @@
 import React from 'react';
 import { Flex, Box, Button, Heading } from '@chakra-ui/react'
 import money from '../images/money.png'; // using images with import
-import NavBar from './NavBar';
+import NavBar from '../components/NavBar';
 
 
 function HomePage() {

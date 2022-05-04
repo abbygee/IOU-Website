@@ -20,7 +20,7 @@ import { AtSignIcon, LockIcon } from '@chakra-ui/icons'
 // import axios from 'axios'
 // const url = "http://localhost:3030/user/signup/" 
 
-function Register() {
+function Login() {
     const [nameInput, setNameInput] = useState('')
     const [passInput, setPassInput] = useState('')
 
@@ -136,4 +136,4 @@ function Register() {
     );
 }
 
-export default Register;
+export default Login;
