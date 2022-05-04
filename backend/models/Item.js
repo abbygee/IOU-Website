@@ -13,11 +13,7 @@ const ItemSchema = mongoose.Schema({
     type: Array,
     required: false
   },
-  // createdAt: {
-  //   type: Date,
-  //   required: true
-  // }
-});
+}, {collection: 'itemCollection'});
 // peoples should be an array of users that the purchaser wants to share cost with
 
 // export model item with PurchaseSchema
