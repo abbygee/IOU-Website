@@ -1,5 +1,5 @@
 import { React, useState } from 'react';
-import NavBar from "../components/NavBar.js" 
+import NavBar from "../components/Header.js" //responsive version
 import {
     Box,
     FormControl,

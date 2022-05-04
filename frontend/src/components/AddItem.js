@@ -26,13 +26,10 @@ function AddItem(props) {
   
     return (
       <>
-        {/* <Flex w='100%' align="center" justify="center" mb='7%'> */}
-            <Button ref={btnRef} bg='#CA41D6' _hover={{ bg: '#e261ed' }} onClick={onOpen}>
-            Add {toAdd}
-            </Button>
-        {/* </Flex> */}
+        <Button ref={btnRef} bg='#CA41D6' _hover={{ bg: '#e261ed' }} onClick={onOpen}>
+        Add {toAdd}
+        </Button>
        
-
         <Drawer 
         variant='alwaysOpen'
         isOpen={isOpen}

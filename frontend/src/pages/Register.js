@@ -1,5 +1,6 @@
 import { React, useState } from 'react';
-import NavBar from "../components/NavBar.js" 
+// import NavBar from "../components/NavBar.js" 
+import NavBar from "../components/Header.js" //responsive version
 import {
     Box,
     FormControl,
@@ -81,7 +82,7 @@ function Register() {
                             // <FormHelperText color="white">
                             // Enter a unique username.
                             // </FormHelperText>
-                            console.log("hey")
+                            console.log("username is good")
                         ) : (
                             <FormErrorMessage color="#e261ed">A username is required.</FormErrorMessage>
                         )}

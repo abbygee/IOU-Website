@@ -1,5 +1,5 @@
 import { React } from 'react';
-import NavBar from "../components/NavBar" 
+import NavBar from "../components/Header.js" //responsive version
 import DebtCard from "../components/DebtCard" 
 import CreditCard from "../components/CreditCard" 
 import Add from '../components/AddMember';

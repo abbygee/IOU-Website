@@ -1,5 +1,5 @@
 import { React } from 'react';
-import NavBar from "../components/NavBar" 
+import NavBar from "../components/Header.js" //responsive version
 import DebtCard from "../components/DebtCard" 
 import CreditCard from "../components/CreditCard" 
 import Add from '../components/AddItem';
@@ -34,6 +34,30 @@ function Dashboard() {
         owe: "Amount You Owe Others"
     }
 
+    // Dummy data
+    // const user1 = {
+    //     username: "abbygeed",
+    //     name: "abby"
+    // }
+    // const user2 = {
+    //     username: "seronton",
+    //     name: "yoonji"
+    // }
+    // const user3 = {
+    //     username: "pbate",
+    //     name: "patrick"
+    // }
+
+    // const group = {
+    //     members: [user1, user2]
+    // }
+
+    // const item1 = {
+    //     name: "Oreos",
+    //     price: 3.00,
+    //     peoples: [user2, user3],
+    // }
+
     return (
         <Box>
             <NavBar />
@@ -56,7 +80,7 @@ function Dashboard() {
                     <Box w="60%" mr="5%">
                         {/* Inline please */}
                         <Flex align="center" justify="space-between">
-                            <Text fontSize='6xl'>Dashboard</Text>
+                            <Text fontSize={['xl', '5xl', '6xl', '6xl']}>Dashboard</Text>
                             <Flex align="center" gap='5px'>
                                 <Add title='an item'/>
                                 <Spacer />
