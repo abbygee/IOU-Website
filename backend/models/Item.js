@@ -6,13 +6,17 @@ const ItemSchema = mongoose.Schema({
     required: true,
   },
   price: {
-    type: float,
+    type: Number,
     required: true,
   },
   peoples: {
     type: Array,
-    required: false
+    required: true,
   },
+  boughtBy: {
+    type: String,
+    required: true,
+  }
 }, {collection: 'itemCollection'});
 // peoples should be an array of users that the purchaser wants to share cost with
 

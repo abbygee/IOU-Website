@@ -17,9 +17,7 @@ router.post(
   "/signup",
   [
     check("username", "Please Enter a Valid Username").not().isEmpty(),
-    check("password", "Please enter a valid password").isLength({
-      min: 6,
-    }),
+    check("password", "Please enter a valid password").isLength({min: 6}),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -29,51 +27,52 @@ router.post(
       });
     }
 
-    const { username, password } = req.body;
-    const shoppinglist = [];
+    const { username, password, displayName } = req.body;
+    
     try {
-      let user = await User.findOne({
-        username,
-      });
+      let user = await User.findOne({username});
       if (user) {
         return res.status(400).json({
           msg: "Username Already Exists",
         });
       }
 
+      const salt = await bcrypt.genSalt(10);
+      const protectedPassword = await bcrypt.hash(password, salt);
+
       user = new User({
         username,
-        password,
-        shoppinglist
+        protectedPassword,
+        displayName,
       });
 
-      const salt = await bcrypt.genSalt(10);
-      user.password = await bcrypt.hash(password, salt);
+      console.log("good job!")
+      res.json({ status: 'ok' })
 
-      await user.save();
+      // await user.save();
 
-      const payload = {
-        user: {
-          id: user.id,
-        },
-      };
+      // const payload = {
+      //   user: {
+      //     id: user.id,
+      //   },
+      // };
 
-      jwt.sign(
-        payload,
-        "randomString",
-        {
-          expiresIn: 10000,
-        },
-        (err, token) => {
-          if (err) throw err;
-          res.status(200).json({
-            token,
-          });
-        }
-      );
+      // jwt.sign(
+      //   payload,
+      //   "randomString",
+      //   {
+      //     expiresIn: 10000,
+      //   },
+      //   (err, token) => {
+      //     if (err) throw err;
+      //     res.status(200).json({
+      //       token,
+      //     });
+      //   }
+      // );
     } catch (err) {
-      console.log(err.message);
-      res.status(500).send("Error in Saving");
+      // console.log(err.message);
+      res.json(500).send("Error in Saving");
     }
   }
 );

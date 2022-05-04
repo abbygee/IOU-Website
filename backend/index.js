@@ -1,15 +1,16 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const cors = require('cors')
 
 const user = require("./routes/user");
 const shop = require("./routes/dashboard");
 
-const InitiateMongoServer = require("./config/db");
-
 // Initiate Mongo Server
+const InitiateMongoServer = require("./config/db");
 InitiateMongoServer();
 
 const app = express();
+app.use(cors());app.use(express.json())
 
 // PORT
 const PORT = process.env.PORT || 4000;
@@ -24,16 +25,14 @@ app.get("/", (req, res) => {
 /**
  * Router Middleware
  * Router - /user/*
- * Method - *
  */
 app.use("/user", user);
 
 /**
  * Router Middleware
  * Router - /dashboard/*
- * Method - *
  */
-app.use("/dashboard", shop);
+// app.use("/dashboard", shop);
 
 app.listen(PORT, (req, res) => {
   console.log(`Server Started at PORT ${PORT}`);

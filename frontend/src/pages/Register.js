@@ -1,5 +1,6 @@
 import { React, useState } from 'react';
-// import NavBar from "../components/NavBar.js" 
+import { useNavigate } from 'react-router-dom'
+
 import NavBar from "../components/Header.js" //responsive version
 import {
     Box,
@@ -13,24 +14,54 @@ import {
     Heading,
     InputLeftElement,
     InputGroup,
-    Spacer
+    Spacer,
+    Text,
   } from '@chakra-ui/react'
 
 import { AtSignIcon, LockIcon } from '@chakra-ui/icons'
-
+import { BsFillPersonFill } from 'react-icons/bs'
 
 // import axios from 'axios'
-// const url = "http://localhost:3030/user/signup/" 
+// const url = "http://localhost:4000/user/signup/" 
 
 function Register() {
-    const [nameInput, setNameInput] = useState('')
-    const [passInput, setPassInput] = useState('')
+    const history = useNavigate()
 
-    const handleNameInputChange = (e) => setNameInput(e.target.value)
-    const handlePassInputChange = (e) => setPassInput(e.target.value)
+    const [displayName, setDisplayName] = useState('')
+    const [password, setPassword] = useState('')
+    const [username, setUsername] = useState('')
 
-    const isNameError = nameInput === ''
-    const isPassError = passInput === ''
+
+    const handleDisplayNameChange = (e) => setDisplayName(e.target.value)
+    const handlePasswordChange = (e) => setPassword(e.target.value)
+    const handleUsernameChange = (e) => setUsername(e.target.value)
+
+    const isDisplayNameError = displayName === ''
+    const isPassError = password === ''
+    const isUsernameError = username === ''
+
+    async function registerUser(event) {
+        console.log("hello?")
+		event.preventDefault()
+
+		const response = await fetch('http://localhost:4000/user/signup', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				username,
+				password,
+				displayName,
+			}),
+		})
+
+		const data = await response.json()
+
+		if (data.status === 'ok') {
+			history('/login')
+		}
+	}
 
     return (
         <Box>
@@ -48,17 +79,44 @@ function Register() {
                 justify='space-evenly'
                 mr="30%"
                 ml="30%"
-                mt="5%"
+                mt="4%"
                 gap="10px"
             >
                 <Heading color="white" size='4xl'>Sign Up</Heading>
                 <Spacer />
-                <Heading w="50%" color="white" textAlign="center" size='md'>Sign up and start managing your group expenditures!</Heading>
-                <Spacer />
-                <Spacer />
+                <Text w="50%" color="white" textAlign="center" fontSize='xl'>Sign up and start managing your group expenditures!</Text>
                 <Spacer />
                 <Box w="50%">
-                    <FormControl isInvalid={isNameError}>
+                    <form onSubmit={registerUser}>
+                    <FormControl isInvalid={isDisplayNameError}>
+                        <FormLabel htmlFor='displayname'></FormLabel>
+                        <InputGroup>
+                            <InputLeftElement
+                            pointerEvents='none'
+                            children={<BsFillPersonFill color='rgba(192, 203, 217)' />}
+                            />
+                            <Input
+                                id='displayname'
+                                type='displayname'
+                                value={displayName}
+                                onChange={handleDisplayNameChange}
+                                placeholder='Display Name'
+                                variant='filled'
+                                focusBorderColor='#e261ed'
+                                errorBorderColor='#CA41D6'
+                                _focus={{ bg: 'white' }}
+                            />
+                        </InputGroup>
+            
+                        {!isDisplayNameError ? (
+                            <FormHelperText color="white">
+                            How you will appear to others.
+                            </FormHelperText>
+                        ) : (
+                            <FormErrorMessage color="#e261ed">A display name is required.</FormErrorMessage>
+                        )}
+                    </FormControl>
+                    <FormControl isInvalid={isUsernameError}>
                         <FormLabel htmlFor='username'></FormLabel>
                         <InputGroup>
                             <InputLeftElement
@@ -68,8 +126,8 @@ function Register() {
                             <Input
                                 id='username'
                                 type='username'
-                                value={nameInput}
-                                onChange={handleNameInputChange}
+                                value={username}
+                                onChange={handleUsernameChange}
                                 placeholder='Username'
                                 variant='filled'
                                 focusBorderColor='#e261ed'
@@ -78,11 +136,10 @@ function Register() {
                             />
                         </InputGroup>
             
-                        {!isNameError ? (
-                            // <FormHelperText color="white">
-                            // Enter a unique username.
-                            // </FormHelperText>
-                            console.log("username is good")
+                        {!isUsernameError ? (
+                            <FormHelperText color="white">
+                            Enter a unique username.
+                            </FormHelperText>
                         ) : (
                             <FormErrorMessage color="#e261ed">A username is required.</FormErrorMessage>
                         )}
@@ -97,8 +154,8 @@ function Register() {
                             <Input
                                 id='password'
                                 type='password'
-                                value={passInput}
-                                onChange={handlePassInputChange}
+                                value={password}
+                                onChange={handlePasswordChange}
                                 placeholder='Password'
                                 variant='filled'
                                 focusBorderColor='#e261ed'
@@ -117,11 +174,18 @@ function Register() {
                     </FormControl>
 
               
-                    <Button color="white" type="submit" bg='#CA41D6' size='lg' _hover={{ bg: '#e261ed' }} width="full" mt={4}>
+                    <Button 
+                    color="white" 
+                    type="submit"
+                    bg='#CA41D6' 
+                    size='lg' 
+                    _hover={{ bg: '#e261ed' }} 
+                    width="full" 
+                    mt={4}
+                    >
                         SIGN UP
                     </Button>
-                
-
+                    </form>
                 </Box>
 
                 <Spacer />
@@ -133,7 +197,6 @@ function Register() {
                 <Button w="50%" color="white" type="submit" bg='#CA41D6' size='lg' _hover={{ bg: '#e261ed' }}>
                         LOGIN
                 </Button>   
-
             </Flex>
         </Box>
         </Box>
