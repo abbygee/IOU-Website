@@ -1,30 +1,20 @@
 import { React, useState } from 'react';
 import { useNavigate } from 'react-router-dom'
 
-import NavBar from "../components/Header.js" //responsive version
 import {
-    Box,
-    FormControl,
-    FormLabel,
-    FormErrorMessage,
-    FormHelperText,
+    Box, Flex, Spacer,
+    FormControl, FormLabel, FormErrorMessage, FormHelperText,
     Input,
-    Button,
-    Flex,
-    Heading,
-    InputLeftElement,
-    InputGroup,
-    Spacer,
-    Text,
+    Button, 
+    Heading, Text,
+    InputLeftElement, InputGroup, 
   } from '@chakra-ui/react'
-
 import { AtSignIcon, LockIcon } from '@chakra-ui/icons'
 import { BsFillPersonFill } from 'react-icons/bs'
 
-// import axios from 'axios'
-// const url = "http://localhost:4000/user/signup/" 
+import NavBar from "../components/Header.js" //responsive version
 
-function Register() {
+const Register = () => {
     const history = useNavigate()
 
     const [displayName, setDisplayName] = useState('')
@@ -41,7 +31,7 @@ function Register() {
     const isUsernameError = username === ''
 
     async function registerUser(event) {
-        console.log("hello?")
+        // TODO: What does this do lol
 		event.preventDefault()
 
 		const response = await fetch('http://localhost:4000/user/signup', {
@@ -50,9 +40,9 @@ function Register() {
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
+                displayName,
 				username,
 				password,
-				displayName,
 			}),
 		})
 
@@ -60,7 +50,9 @@ function Register() {
 
 		if (data.status === 'ok') {
 			history('/login')
-		}
+		} else {
+            alert('Please choose another username.')
+        }
 	}
 
     return (

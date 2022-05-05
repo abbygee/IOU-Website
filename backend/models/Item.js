@@ -13,7 +13,13 @@ const ItemSchema = mongoose.Schema({
     type: Array,
     required: true,
   },
-  boughtBy: {
+  // Display Name
+  boughtByDisplay: {
+    type: String,
+    required: true,
+  },
+  // Username
+  boughtByUser: {
     type: String,
     required: true,
   }

@@ -28,7 +28,7 @@ const Header = (props) => {
       wrap="wrap"
       w="100%"
     //   mb={8}
-      p={8}
+      p={6}
       bg={['red', "#2B3699", "#2B3699", "white"]}
       color={["white", "white", "white", "black"]}
       {...props}

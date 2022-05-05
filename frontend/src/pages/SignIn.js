@@ -1,34 +1,51 @@
 import { React, useState } from 'react';
-import NavBar from "../components/Header.js" //responsive version
+
 import {
-    Box,
-    FormControl,
-    FormLabel,
-    FormErrorMessage,
+    Box, Flex, Spacer,
+    FormControl, FormLabel, FormErrorMessage,
     Input,
     Button,
-    Flex,
-    Heading,
-    InputLeftElement,
-    InputGroup,
-    Spacer
+    Heading, Text,
+    InputLeftElement, InputGroup,
   } from '@chakra-ui/react'
-
 import { AtSignIcon, LockIcon } from '@chakra-ui/icons'
 
+import NavBar from "../components/Header.js" //responsive version
 
-// import axios from 'axios'
-// const url = "http://localhost:3030/user/signup/" 
+const Login = () => {
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
 
-function Login() {
-    const [nameInput, setNameInput] = useState('')
-    const [passInput, setPassInput] = useState('')
+    const handleUsernameChange = (e) => setUsername(e.target.value)
+    const handlePasswordChange = (e) => setPassword(e.target.value)
 
-    const handleNameInputChange = (e) => setNameInput(e.target.value)
-    const handlePassInputChange = (e) => setPassInput(e.target.value)
+    const isPassError = password === ''
+    const isUsernameError = username === ''
 
-    const isNameError = nameInput === ''
-    const isPassError = passInput === ''
+    async function loginUser(event) {
+		event.preventDefault()
+
+		const response = await fetch('http://localhost:4000/user/login', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				username,
+				password,
+			}),
+		})
+
+		const data = await response.json()
+
+		if (data.user) {
+			localStorage.setItem('token', data.user)
+			alert('Login successful')
+			window.location.href = '/dashboard'
+		} else {
+			alert('Please check your username and password')
+		}
+	}
 
     return (
         <Box>
@@ -51,12 +68,13 @@ function Login() {
             >
                 <Heading color="white" size='4xl'>Sign In</Heading>
                 <Spacer />
-                <Heading w="50%" color="white" textAlign="center" size='md'>Sign in and start managing your group expenditures!</Heading>
+                <Text w="50%" color="white" textAlign="center" fontSize='xl'>Sign in and start managing your group expenditures!</Text>
                 <Spacer />
                 <Spacer />
                 <Spacer />
                 <Box w="50%">
-                    <FormControl isInvalid={isNameError}>
+                <form onSubmit={loginUser}>
+                    <FormControl isInvalid={isUsernameError}>
                         <FormLabel htmlFor='username'></FormLabel>
                         <InputGroup>
                             <InputLeftElement
@@ -66,8 +84,8 @@ function Login() {
                             <Input
                                 id='username'
                                 type='username'
-                                value={nameInput}
-                                onChange={handleNameInputChange}
+                                value={username}
+                                onChange={handleUsernameChange}
                                 placeholder='Username'
                                 variant='filled'
                                 focusBorderColor='#e261ed'
@@ -76,7 +94,7 @@ function Login() {
                             />
                         </InputGroup>
             
-                        {!isNameError ? (
+                        {!isUsernameError ? (
                             // <FormHelperText color="white">
                             // Enter a unique username.
                             // </FormHelperText>
@@ -95,8 +113,8 @@ function Login() {
                             <Input
                                 id='password'
                                 type='password'
-                                value={passInput}
-                                onChange={handlePassInputChange}
+                                value={password}
+                                onChange={handlePasswordChange}
                                 placeholder='Password'
                                 variant='filled'
                                 focusBorderColor='#e261ed'
@@ -111,17 +129,17 @@ function Login() {
                             <FormErrorMessage color="#e261ed">A password is required.</FormErrorMessage>
                         )}
                     </FormControl>
-
               
                     <Button color="white" type="submit" bg='#CA41D6' size='lg' _hover={{ bg: '#e261ed' }} width="full" mt={4}>
                         LOGIN
                     </Button>
-                
 
+                </form>
                 </Box>
 
                 <Spacer />
                 <Spacer />
+
                 <Heading w="50%" color="white" textAlign="center" size='sm'>
                     Don't have an account yet?
                 </Heading>

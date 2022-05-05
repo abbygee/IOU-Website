@@ -4,7 +4,7 @@ import money from '../images/money.png'; // using images with import
 import NavBar from "../components/Header.js" //responsive version
 
 
-function HomePage() {
+const HomePage = () => {
     return(
         <Box h="100%" m="0">
           <NavBar />
@@ -34,14 +34,13 @@ function HomePage() {
           <Box
             bg="#2B3699"
             w="100%"
-            mt='25px'
-            // h="134px"
             h="100%"
             color="white"
             align="center"
             position="fixed"
+            mt='2%'
           >
-            position fixed to fill rest of viewport
+            TODO: position fixed to fill rest of viewport
           </Box>
         </Box>
         

@@ -27,7 +27,7 @@ import { AiOutlineHome } from 'react-icons/ai'
 // import axios from 'axios'
 // const url = "http://localhost:3030/user/signup/" 
 
-function GroupMembers() {
+const GroupMembers = () => {
     const dash = {
         owed: "Amount They Owe You",
         owe: "Amount You Owe Them"

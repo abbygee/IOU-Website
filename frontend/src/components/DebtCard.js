@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Text, Flex } from '@chakra-ui/react'
 
-function Debt(props) {
+const Debt = (props) => {
     let price = 10.00
     let title = props.title
 

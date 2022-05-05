@@ -15,7 +15,7 @@ import {
   } from '@chakra-ui/react'
 
 
-function AddMember(props) {
+const AddMember = (props) => {
     const toAdd = props.title
   
     return (

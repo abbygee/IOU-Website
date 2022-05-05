@@ -1,62 +1,68 @@
-import { React } from 'react';
+import { React, useState, useEffect } from 'react';
+import { decodeToken } from "react-jwt";
+import { useNavigate } from 'react-router-dom'
+
+import {
+    Box, Flex, Spacer,
+    Select,
+    Text,
+    Icon,
+    Table, Thead, Tbody, Tr, Th, Td, TableContainer,
+    Button,
+    Link,
+  } from '@chakra-ui/react'
+import { BsPeople } from 'react-icons/bs'
+
 import NavBar from "../components/Header.js" //responsive version
 import DebtCard from "../components/DebtCard" 
 import CreditCard from "../components/CreditCard" 
 import Add from '../components/AddItem';
 
-import {
-    Box,
-    Select,
-    Text,
-    Icon,
-    Table,
-    Thead,
-    Tbody,
-    Tr,
-    Th,
-    Td,
-    TableContainer,
-    Flex,
-    Button,
-    Link,
-    Spacer
-  } from '@chakra-ui/react'
+const Dashboard = () => {
+    const owedLabel = "Amount Owed to You"
+    const oweLabel = "Amount You Owe Others"
+    // const [totalSpent, setSpent] = useState(0)
 
-import { BsPeople } from 'react-icons/bs'
+    const history = useNavigate()
+	
+    const [items, setItems] = useState([])
 
+	async function populateItems() {
+		const req = await fetch('http://localhost:4000/dashboard/items', {
+			headers: {
+				'x-access-token': localStorage.getItem('token'),
+			},
+		})
 
-// import axios from 'axios'
-// const url = "http://localhost:3030/user/signup/" 
+		const data = await req.json()
 
-function Dashboard() {
-    const dash = {
-        owed: "Amount Owed to You",
-        owe: "Amount You Owe Others"
-    }
+		if (data.status === 'ok') {
+			setItems(data.items)
+		} else {
+			alert(data.message)
+		}
+	}
 
-    // Dummy data
-    // const user1 = {
-    //     username: "abbygeed",
-    //     name: "abby"
-    // }
-    // const user2 = {
-    //     username: "seronton",
-    //     name: "yoonji"
-    // }
-    // const user3 = {
-    //     username: "pbate",
-    //     name: "patrick"
-    // }
+	useEffect(() => {
+		const token = localStorage.getItem('token')
+		if (token) {
+			const user = decodeToken(token)
+			if (!user) {
+				localStorage.removeItem('token')
+				history('/login')
+			} else {
+				populateItems()
+			}
+		}
+	})
 
-    // const group = {
-    //     members: [user1, user2]
-    // }
-
-    // const item1 = {
-    //     name: "Oreos",
-    //     price: 3.00,
-    //     peoples: [user2, user3],
-    // }
+    const listItems = items.map(item => 
+        <Tr>
+            <Td>{item.name}</Td>
+            <Td>{item.boughtByDisplay}</Td>
+            <Td isNumeric>{item.price}</Td>
+        </Tr>
+    )
 
     return (
         <Box>
@@ -81,9 +87,13 @@ function Dashboard() {
                         {/* Inline please */}
                         <Flex align="center" justify="space-between">
                             <Text fontSize={['xl', '5xl', '6xl', '6xl']}>Dashboard</Text>
+
                             <Flex align="center" gap='5px'>
                                 <Add title='an item'/>
+
                                 <Spacer />
+
+                                {/* TODO at month filter/functionality */}
                                 <Select
                                 w="fit-content"
                                 bg='rgba(31, 33, 74, 1)'
@@ -105,10 +115,9 @@ function Dashboard() {
                                     <option value='12'>December</option>
                                 </Select>
                             </Flex>
-                            
-                            
                         </Flex>
                         
+                        {/* TODO: fix maxHeight to be responsive to view height, borderRadius , */}
                         <TableContainer overflowY="auto" maxHeight="424px" borderRadius="10px" mt="3%" background="rgba(255, 255, 255, 0.1)">
                             <Table variant='unstyled' size="lg">
                                 <Thead position="sticky" top={0} color="white" bg="#CA41D6">
@@ -118,92 +127,30 @@ function Dashboard() {
                                         <Th isNumeric>Price</Th>
                                     </Tr>
                                 </Thead>
+                                
                                 <Tbody>
-                                    <Tr>
-                                        <Td>Oreos</Td>
-                                        <Td>Abby</Td>
-                                        <Td isNumeric>5.00</Td>
-                                    </Tr>
-                                    <Tr>
-                                        <Td>Grapes</Td>
-                                        <Td>Yoonji</Td>
-                                        <Td isNumeric>10.00</Td>
-                                    </Tr>
-                                    <Tr>
-                                        <Td>Insurance</Td>
-                                        <Td>Abby</Td>
-                                        <Td isNumeric>26.00</Td>
-                                    </Tr>
-                                    <Tr>
-                                        <Td>Insurance</Td>
-                                        <Td>Abby</Td>
-                                        <Td isNumeric>26.00</Td>
-                                    </Tr>
-                                    <Tr>
-                                        <Td>Insurance</Td>
-                                        <Td>Abby</Td>
-                                        <Td isNumeric>26.00</Td>
-                                    </Tr>
-                                    <Tr>
-                                        <Td>Insurance</Td>
-                                        <Td>Abby</Td>
-                                        <Td isNumeric>26.00</Td>
-                                    </Tr>
-                                    <Tr>
-                                        <Td>Insurance</Td>
-                                        <Td>Abby</Td>
-                                        <Td isNumeric>26.00</Td>
-                                    </Tr>
-                                    <Tr>
-                                        <Td>Insurance</Td>
-                                        <Td>Abby</Td>
-                                        <Td isNumeric>26.00</Td>
-                                    </Tr>
-                                    <Tr>
-                                        <Td>Insurance</Td>
-                                        <Td>Abby</Td>
-                                        <Td isNumeric>26.00</Td>
-                                    </Tr>
-                                    <Tr>
-                                        <Td>Insurance</Td>
-                                        <Td>Abby</Td>
-                                        <Td isNumeric>26.00</Td>
-                                    </Tr>
-                                    <Tr>
-                                        <Td>Insurance</Td>
-                                        <Td>Abby</Td>
-                                        <Td isNumeric>26.00</Td>
-                                    </Tr>
-                                    <Tr>
-                                        <Td>Insurance</Td>
-                                        <Td>Abby</Td>
-                                        <Td isNumeric>26.00</Td>
-                                    </Tr>
+                                    {listItems}
                                 </Tbody>
                             </Table>
                         </TableContainer>
                     </Box>
 
                     {/* Right Column */}
-                    
                     <Box w="26%" ml="5%">
 
                         <Flex justify='center'>
-                        
-                        <Link href="/group-members">
-                            <Button mb="7%" bg='#CA41D6' _hover={{ bg: '#e261ed' }}>
-                                <Text mr='8px' fontSize='2xl'>Group Members</Text>
-                                <Icon w={6} h={6} as={BsPeople} />
-                            </Button>    
-                        </Link>
-                                 
+                            <Link href="/group-members">
+                                <Button mb="7%" bg='#CA41D6' _hover={{ bg: '#e261ed' }}>
+                                    <Text mr='8px' fontSize='2xl'>Group Members</Text>
+                                    <Icon w={6} h={6} as={BsPeople} />
+                                </Button>    
+                            </Link>
                         </Flex>
 
-                        {/* Credit Card */}
                         <CreditCard />
 
-                        <DebtCard title={dash.owed}/>
-                        <DebtCard title={dash.owe}/>
+                        <DebtCard title={owedLabel} />
+                        <DebtCard title={oweLabel} />
                     </Box>
                 </Flex>
                 

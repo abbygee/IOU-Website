@@ -2,7 +2,7 @@ import React from 'react';
 import { Flex, Box, Text, Image } from '@chakra-ui/react'
 import master from '../images/mastercard.png'; // using images with import
 
-function Debt() {
+const Debt = () => {
     let cost = 100.00;
 
     return(

@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const cors = require('cors')
 
 const user = require("./routes/user");
-const shop = require("./routes/dashboard");
+const dashboard = require("./routes/dashboard");
 
 // Initiate Mongo Server
 const InitiateMongoServer = require("./config/db");
@@ -32,7 +32,7 @@ app.use("/user", user);
  * Router Middleware
  * Router - /dashboard/*
  */
-// app.use("/dashboard", shop);
+app.use("/dashboard", dashboard);
 
 app.listen(PORT, (req, res) => {
   console.log(`Server Started at PORT ${PORT}`);

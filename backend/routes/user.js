@@ -4,75 +4,42 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
 
-const auth = require("./../middleware/auth");
 const User = require("../models/User");
 
 /**
  * @method - POST
  * @param - /signup
- * @description - User SignUp
+ * @description - User SignUp through Pages/Register.js
  */
-
 router.post(
-  "/signup",
-  [
-    check("username", "Please Enter a Valid Username").not().isEmpty(),
-    check("password", "Please enter a valid password").isLength({min: 6}),
-  ],
-  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        errors: errors.array(),
-      });
-    }
+  "/signup", async (req, res) => {
+    // console.log(req.body)
 
-    const { username, password, displayName } = req.body;
+    const displayName = req.body.displayName
+    const username = req.body.username
+    const password = req.body.password
     
     try {
       let user = await User.findOne({username});
       if (user) {
-        return res.status(400).json({
-          msg: "Username Already Exists",
-        });
+        // alert('Username is taken, please choose a different one.')
+        return res.json({ status: 'error', error: 'Duplicate username' })
       }
 
       const salt = await bcrypt.genSalt(10);
       const protectedPassword = await bcrypt.hash(password, salt);
 
-      user = new User({
-        username,
-        protectedPassword,
-        displayName,
-      });
+      await User.create({
+        username: username,
+        password: protectedPassword,
+        displayName: displayName,
+      })
 
-      console.log("good job!")
+      console.log("good job! you registered")
       res.json({ status: 'ok' })
 
-      // await user.save();
-
-      // const payload = {
-      //   user: {
-      //     id: user.id,
-      //   },
-      // };
-
-      // jwt.sign(
-      //   payload,
-      //   "randomString",
-      //   {
-      //     expiresIn: 10000,
-      //   },
-      //   (err, token) => {
-      //     if (err) throw err;
-      //     res.status(200).json({
-      //       token,
-      //     });
-      //   }
-      // );
     } catch (err) {
-      // console.log(err.message);
-      res.json(500).send("Error in Saving");
+      res.json({ status: 'error', error: 'Registration failed' })
     }
   }
 );
@@ -86,48 +53,40 @@ router.post(
   ],
   async (req, res) => {
     const errors = validationResult(req);
-
     if (!errors.isEmpty()) {
       return res.status(400).json({
         errors: errors.array(),
       });
     }
 
-    const { username, password } = req.body;
+    const username = req.body.username
+    const password = req.body.password
+
     try {
       let user = await User.findOne({
         username: username,
       });
+
       if (!user)
         return res.status(400).json({
           message: "User Not Exist",
         });
 
       const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch)
+      if (!isMatch) 
         return res.status(400).json({
           message: "Incorrect Password !",
         });
 
-      const payload = {
-        user: {
-          id: user.id,
-        },
-      };
-
-      jwt.sign(
-        payload,
-        "randomString",
+      const token = jwt.sign(
         {
-          expiresIn: 3600,
+          username: user.username,
         },
-        (err, token) => {
-          if (err) throw err;
-          res.status(200).json({
-            token,
-          });
-        }
-      );
+        'secret123'
+      ) 
+  
+      return res.json({ status: 'ok', user: token })
+
     } catch (e) {
       console.error(e);
       res.status(500).json({
@@ -136,21 +95,5 @@ router.post(
     }
   }
 );
-
-/**
- * @method - GET
- * @description - Get LoggedIn User
- * @param - /user/me
- */
-
- router.get("/me", auth, async (req, res) => {
-    try {
-      // request.user is getting fetched from Middleware after token authentication
-      const user = await User.findById(req.user.id);
-      res.json(user);
-    } catch (e) {
-      res.send({ message: "Error in Fetching user" });
-    }
-  });
 
 module.exports = router;

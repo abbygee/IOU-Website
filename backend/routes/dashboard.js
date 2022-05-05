@@ -1,60 +1,77 @@
-// const express = require("express");
-// const router = express.Router();
-// const jwt = require("jsonwebtoken");
+const express = require("express");
+const router = express.Router();
+const jwt = require("jsonwebtoken");
 
-// const auth = require("./../middleware/auth");
-// const User = require("../models/User");
-// const Item = require("../models/Item");
+const User = require("../models/User");
+const Item = require("../models/Item");
 
-// // TODO: Does this just check if the user is signed in?
-// router.use('/create', verifyAuthToken)
-// router.use('/signup', verifyAuthToken)
+// TODO: save this secret in some environment variable that isn't public (or obfuscate code)
+const secretKey = 'secret123'
 
-// /**
-//  * @method - GET
-//  * @description - Retrieve shopping list
-//  * @param - /shop/list
-//  */
-// router.get('/list', auth, async (req, res) => {
-//     try {
-//       // request.user is getting fetched from Middleware after token authentication
-//       const user = await User.findById(req.user.id);
-//       res.json(user.shoppinglist);
-//     } catch (e) {
-//       res.send({ message: 'Error in Fetching user' });
-//     }
-// });
+/**
+ * @method - GET
+ * @description - Retrieve myItems
+ * @param - /dashboard/items
+ */
+router.get('/items', async (req, res) => {
+    const token = req.headers['x-access-token']
 
-// /**
-//  * @method - POST
-//  * @description - Add an item to the dashboard table
-//  * @param - /dashboard/add
-//  */
-//  router.post('/add', auth, async (req, res) => {
-//     try {
-//         const name = req.body.name;
-//         const price = req.body.price;
-//         const peoples = req.body.peoples;
-
-//         const user = await User.findById(req.user.id);
+    try {
+        const decoded = jwt.verify(token, secretKey)
+        const username = decoded.username
+        const user = await User.findOne({ username: username });
         
-//         currentlist = user.shoppinglist;
-        
-//         currentlist.push(item);
-        
-//         user.shoppinglist = await currentlist;
-//         await user.save();
-//         res.json(user.shoppinglist);
-//     } catch (e) {
-//       res.send({ message: 'Error in Fetching user' });
-//     }
-// });
+        return res.json({status: 'ok', items: user.myItems});
+    } catch (e) {
+        console.log(e)
+        res.send({ status: 'error', message: 'invalid token' });
+    }
+});
 
-// /**
-//  * @method - DELETE
-//  * @description - Delete item from shopping list
-//  * @param - /shop/delete
-//  */
+/**
+ * @method - POST
+ * @description - Add an item to the dashboard table
+ * @param - /dashboard/add
+ */
+ router.post('/add', async (req, res) => {
+    const token = req.headers['x-access-token']
+
+    try {
+        const decoded = jwt.verify(token, secretKey)
+        const username = decoded.username
+
+        const name = req.body.name;
+        const price = req.body.price;
+        const peoples = req.body.peoples;
+
+        const user = await User.findOne({ username: username });
+
+        let newItem = await Item.create({
+            name: name,
+            price: price,
+            peoples: peoples,
+            boughtByDisplay: user.displayName,
+            boughtByUser: user.username,
+        })
+        
+        currentItems = user.myItems;
+        currentItems.push(newItem);
+        
+        user.myItems = await currentItems;
+        await user.save();
+
+        res.json({status: 'ok', items: user.myItems});
+    } catch (e) {
+        console.log(e)
+        res.send({ status: 'error', message: 'invalid token' });
+    }
+});
+
+/**
+ * @method - DELETE
+ * @description - Delete item from shopping list
+ * @param - /shop/delete
+ */
 //  router.delete('/delete', auth, async (req, res) => {
 //     try {
 //         const item = req.body.item;
@@ -75,4 +92,4 @@
 //     }
 // });
 
-// module.exports = router;
+module.exports = router;
