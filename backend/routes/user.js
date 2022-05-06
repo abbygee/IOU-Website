@@ -1,5 +1,4 @@
 const express = require("express");
-const { check, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
@@ -9,11 +8,10 @@ const User = require("../models/User");
 /**
  * @method - POST
  * @param - /signup
- * @description - User SignUp through Pages/Register.js
+ * @description - User SignUp
  */
 router.post(
   "/signup", async (req, res) => {
-    // console.log(req.body)
 
     const displayName = req.body.displayName
     const username = req.body.username
@@ -33,31 +31,26 @@ router.post(
         username: username,
         password: protectedPassword,
         displayName: displayName,
+        myGroup: [username]
       })
 
       console.log("good job! you registered")
       res.json({ status: 'ok' })
 
     } catch (err) {
+      console.log(err)
       res.json({ status: 'error', error: 'Registration failed' })
     }
   }
 );
 
+/**
+ * @method - POST
+ * @param - /login
+ * @description - User Login
+ */
 router.post(
-  "/login",
-  [
-    check("password", "Please enter a valid password").isLength({
-      min: 6,
-    }),
-  ],
-  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        errors: errors.array(),
-      });
-    }
+  "/login", async (req, res) => {
 
     const username = req.body.username
     const password = req.body.password
@@ -88,12 +81,27 @@ router.post(
       return res.json({ status: 'ok', user: token })
 
     } catch (e) {
-      console.error(e);
-      res.status(500).json({
-        message: "Server Error",
-      });
+      console.log(err)
+      res.json({ status: 'error', error: 'Login failed' })
     }
   }
 );
+
+/**
+ * @method - DELETE
+ * @description - Delete user
+ * @param - /user/delete
+ */
+ router.delete('/delete', async (req, res) => {
+  const username = req.body.username
+
+  try {
+      await User.deleteOne({ username: username });
+      res.json({status: 'ok'});
+  } catch (e) {
+      console.log(e)
+      res.send({ status: 'error', message: 'no.' });
+  }
+});
 
 module.exports = router;

@@ -9,6 +9,7 @@ const ItemSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
+  // People to charge to
   peoples: {
     type: Array,
     required: true,
@@ -22,7 +23,7 @@ const ItemSchema = mongoose.Schema({
   boughtByUser: {
     type: String,
     required: true,
-  }
+  },
 }, {collection: 'itemCollection'});
 // peoples should be an array of users that the purchaser wants to share cost with
 
