@@ -129,9 +129,10 @@ const Register = () => {
                         </InputGroup>
             
                         {!isUsernameError ? (
-                            <FormHelperText color="white">
-                            Enter a unique username.
-                            </FormHelperText>
+                            console.log("Enter a unique username.")
+                            // <FormHelperText color="white">
+                            
+                            // </FormHelperText>
                         ) : (
                             <FormErrorMessage color="#e261ed">A username is required.</FormErrorMessage>
                         )}

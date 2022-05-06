@@ -1,4 +1,5 @@
-import { React, useState } from 'react';
+import { React, useState, useEffect } from 'react';
+
 import {
     Drawer, DrawerBody, DrawerFooter, DrawerHeader, DrawerContent, DrawerCloseButton,
     Button,
@@ -8,32 +9,54 @@ import {
     Box,
     FormLabel,
     InputGroup, InputLeftAddon,
-    Checkbox, CheckboxGroup,
+    Checkbox, CheckboxGroup, 
   } from '@chakra-ui/react'
-
 
 const AddItem = (props) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
-    // const btnRef = React.useRef()
+
     const label = props.title
+    const group = props.group
 
     const [name, setName] = useState('')
     const [price, setPrice] = useState(0.00)
-    // const [peoples, setPeoples] = useState([])
+    const [peoples, setPeoples] = useState([]) // peoples is who to charge for this specific item
 
-    const testppls = ["abby" , "yoonji"]
-    
-    // const [newItem, setNewItem] = useState('')
+    useEffect(() => {
+      setPeoples(props.group);
+    },[props.group]);
+
+    function editPeoples (isChecked, newUser) {
+      // const isChecked = 
+      // const newUser =  // a username btw
+      let updated = peoples
+
+      if (isChecked) {
+        if (!updated.includes(newUser)) {
+          updated.push(newUser)
+          return updated
+        }
+      } else {
+        if (updated.includes(newUser)) {
+          const index = updated.indexOf(newUser);
+          if (index > -1) {
+            updated.splice(index, 1);
+          }
+          return updated
+        }
+      }
+    }
 
     const handleItemName = (e) => setName(e.target.value)
     const handlePrice = (e) => setPrice(e.target.value)
     const handlePeoples = (e) => {
-      console.log(e.target.value)
-      // setPeoples(e.target.value)
+      const test = editPeoples(e.target.checked, e.target.value)
+      setPeoples(test)
+      console.log(peoples)
     }
     
-    async function addItem(event) {
-      event.preventDefault()
+    async function addItem(e) {
+      e.preventDefault()
   
       const req = await fetch('http://localhost:4000/dashboard/add', {
         method: 'POST',
@@ -44,17 +67,26 @@ const AddItem = (props) => {
         body: JSON.stringify({
           name: name,
           price: price,
-          peoples: testppls,
+          peoples: peoples,
         }),
       })
   
       const data = await req.json()
       if (data.status === 'ok') {
-        alert("Successfully Added! Refresh? page to update table.")
+        setName('')
+        setPrice(0.00)
+        setPeoples(group)
+        console.log("succesfully added item!")
+        onClose()
       } else {
         alert(data.error)
       }
     }
+
+    // TODO: Somehow get display name from group instead of just storing username? (create a group model?) or an API call get?
+    const listGroup = group.map(g => 
+      <Checkbox onChange={handlePeoples} value={g}>{g}</Checkbox>
+    )
   
     return (
       <>
@@ -101,10 +133,9 @@ const AddItem = (props) => {
 
                     <Box>
                       <FormLabel htmlFor='split'>Who do you want to split the price with?</FormLabel>
-                      <CheckboxGroup iconColor='#CA41D6' defaultValue={['abby', 'yoonji']} onChange={handlePeoples}>
+                      <CheckboxGroup iconColor='#CA41D6' defaultValue={group}>
                         <Stack spacing={[1, 5]} direction={['column', 'row']}>
-                          <Checkbox value='abby'>Abby</Checkbox>
-                          <Checkbox value='yoonji'>Yoonji</Checkbox>
+                          {listGroup}
                         </Stack>
                       </CheckboxGroup>
                     </Box>

@@ -1,9 +1,39 @@
-import React from 'react';
+import { React, useState, useEffect } from 'react';
+import { decodeToken } from "react-jwt";
+
 import { Flex, Box, Text, Image } from '@chakra-ui/react'
 import master from '../images/mastercard.png'; // using images with import
 
 const Debt = () => {
-    let cost = 100.00;
+    const [cost, setCost] = useState(0.00)
+
+    async function getTotal() {
+		const req = await fetch('http://localhost:4000/dashboard/spent', {
+			headers: {
+				'x-access-token': localStorage.getItem('token'),
+			},
+		})
+
+		const data = await req.json()
+
+		if (data.status === 'ok') {
+			setCost(data.total)
+		} else {
+			alert(data.message)
+		}
+	}
+
+    useEffect(() => {
+		const token = localStorage.getItem('token')
+		if (token) {
+			const user = decodeToken(token)
+			if (!user) {
+				localStorage.removeItem('token')
+			} else {
+				getTotal()
+			}
+		}
+	})
 
     return(
         <Flex 

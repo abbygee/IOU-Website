@@ -1,7 +1,8 @@
 import SignIn from './pages/SignIn';
 import Home from './pages/HomePage';
 import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
+// import Dashboard from './pages/Dashboard';
+import Dashboard from './pages/MainDash';
 import GroupMembers from './pages/GroupMembers';
 
 import './App.css';
