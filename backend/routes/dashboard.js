@@ -161,7 +161,7 @@ router.get('/items', async (req, res) => {
         const user = await User.findOne({ username: username });
 
         currentlist = user.myItems;
-        currentlist.pop()
+        currentlist.pop() // just deletes last item btw and only deletes from currently signed in users myItems
         
         user.myItems = await currentlist;
         await user.save();
@@ -171,5 +171,34 @@ router.get('/items', async (req, res) => {
         res.send({ status: 'error', message: 'invalid token' });
     }
 });
+
+/**
+ * @method - GET
+ * @description - Retrieve amount you owe to others (regardless of member soout of entire group)
+ * @param - /dashboard/owed
+ */
+//  router.get('/spent', async (req, res) => {
+//     const token = req.headers['x-access-token']
+
+//     try {
+//         const decoded = jwt.verify(token, secretKey)
+//         const username = decoded.username
+//         const user = await User.findOne({ username: username });
+
+//         let total = 0.00
+//         currentItems = user.myItems;
+
+//         for (const i in currentItems) {
+//             for (const p in currentItems[i].peoples) {
+//                 if p.includes()
+//             }
+//         }
+        
+//         return res.json({status: 'ok', total: total});
+//     } catch (e) {
+//         console.log(e)
+//         res.send({ status: 'error', message: 'invalid token' });
+//     }
+// });
 
 module.exports = router;

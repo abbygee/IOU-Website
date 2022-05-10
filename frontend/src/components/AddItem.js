@@ -1,4 +1,5 @@
 import { React, useState, useEffect } from 'react';
+import { decodeToken } from "react-jwt";
 
 import {
     Drawer, DrawerBody, DrawerFooter, DrawerHeader, DrawerContent, DrawerCloseButton,
@@ -15,43 +16,65 @@ import {
 const AddItem = (props) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
+    const [group, setGroup] = useState([])
+    async function populateMembers() {
+      const req = await fetch('http://localhost:4000/dashboard/group', {
+        headers: {
+          'x-access-token': localStorage.getItem('token'),
+        },
+      })
+  
+      const data = await req.json()
+  
+      if (data.status === 'ok') {
+        setGroup(data.group)
+      } else {
+        alert(data.message)
+      }
+    }
+
+    useEffect(() => {
+      const token = localStorage.getItem('token')
+      if (token) {
+        const user = decodeToken(token)
+        if (!user) {
+          localStorage.removeItem('token')
+        } else {
+          populateMembers()
+        }
+      }
+    })
+
     const label = props.title
-    const group = props.group
 
     const [name, setName] = useState('')
     const [price, setPrice] = useState(0.00)
-    const [peoples, setPeoples] = useState([]) // peoples is who to charge for this specific item
+    const [peoples, setPeoples] = useState(group) // peoples is who to charge for this specific item
 
-    useEffect(() => {
-      setPeoples(props.group);
-    },[props.group]);
-
-    function editPeoples (isChecked, newUser) {
-      // const isChecked = 
-      // const newUser =  // a username btw
+    const handleItemName = (e) => setName(e.target.value)
+    const handlePrice = (e) => setPrice(e.target.value)
+    
+    //need to be async?
+    async function handlePeoples(e) {
+      const isChecked = e.target.checked
+      const newUser =  e.target.value // a username btw
       let updated = peoples
 
       if (isChecked) {
         if (!updated.includes(newUser)) {
           updated.push(newUser)
-          return updated
+          setPeoples(updated)
         }
       } else {
+        // TODO: should check that peoples can't be empty
         if (updated.includes(newUser)) {
           const index = updated.indexOf(newUser);
           if (index > -1) {
             updated.splice(index, 1);
           }
-          return updated
+          setPeoples(updated)
         }
       }
-    }
-
-    const handleItemName = (e) => setName(e.target.value)
-    const handlePrice = (e) => setPrice(e.target.value)
-    const handlePeoples = (e) => {
-      const test = editPeoples(e.target.checked, e.target.value)
-      setPeoples(test)
       console.log(peoples)
     }
     
@@ -75,7 +98,7 @@ const AddItem = (props) => {
       if (data.status === 'ok') {
         setName('')
         setPrice(0.00)
-        setPeoples(group)
+        setPeoples([])
         console.log("succesfully added item!")
         onClose()
       } else {
@@ -85,7 +108,7 @@ const AddItem = (props) => {
 
     // TODO: Somehow get display name from group instead of just storing username? (create a group model?) or an API call get?
     const listGroup = group.map(g => 
-      <Checkbox onChange={handlePeoples} value={g}>{g}</Checkbox>
+      <Checkbox key={g} onChange={handlePeoples} value={g}>{g}</Checkbox>
     )
   
     return (
@@ -133,7 +156,7 @@ const AddItem = (props) => {
 
                     <Box>
                       <FormLabel htmlFor='split'>Who do you want to split the price with?</FormLabel>
-                      <CheckboxGroup iconColor='#CA41D6' defaultValue={group}>
+                      <CheckboxGroup iconColor='#CA41D6'>
                         <Stack spacing={[1, 5]} direction={['column', 'row']}>
                           {listGroup}
                         </Stack>

@@ -8,6 +8,7 @@ import {
     Text,
     Table, Thead, Tbody, Tr, Th, Td, TableContainer,
   } from '@chakra-ui/react'
+import { CloseIcon } from '@chakra-ui/icons'
 
 import NavBar from "../components/Header.js" //responsive version
 import DebtCard from "../components/DebtCard" 
@@ -70,9 +71,67 @@ const Dashboard = () => {
 		}
 	})
 
+    async function deleteItem(e) {
+        e.preventDefault()
+    
+        const req = await fetch('http://localhost:4000/dashboard/delete', {
+          method: 'DELETE',
+          headers: {
+            // 'Content-Type': 'application/json',
+            'x-access-token': localStorage.getItem('token'),
+          },
+        })
+    
+        const data = await req.json()
+        if (data.status === 'ok') {
+
+            console.log(data.items)
+            console.log("succesfully deleted last item!")
+        } else {
+            alert(data.error)
+        }
+    }
+
+    const [cost, setCost] = useState(0.00)
+    async function getTotal() {
+		const req = await fetch('http://localhost:4000/dashboard/spent', {
+			headers: {
+				'x-access-token': localStorage.getItem('token'),
+			},
+		})
+
+		const data = await req.json()
+
+		if (data.status === 'ok') {
+			setCost(data.total)
+		} else {
+			alert(data.message)
+		}
+	}
+
+    useEffect(() => {
+		const token = localStorage.getItem('token')
+		if (token) {
+			const user = decodeToken(token)
+			if (!user) {
+				localStorage.removeItem('token')
+			} else {
+				getTotal()
+			}
+		}
+	})
+
+
     const listItems = items.map(item => 
         <Tr>
-            <Td>{item.name}</Td>
+            <Td>
+                <Flex align="baseline">
+                    {item.name}
+                    <Box as="button" onClick={deleteItem} ml={2} w='fit-content' h='fit-content'>
+                        <CloseIcon boxSize={3} />
+                    </Box>
+                </Flex>
+            </Td>
             <Td>{item.boughtByDisplay}</Td>
             <Td isNumeric>{item.price}</Td>
         </Tr>
@@ -152,7 +211,7 @@ const Dashboard = () => {
                             </Link>
                         </Flex> */}
 
-                        <CreditCard />
+                        <CreditCard cost={cost}/>
 
                         <DebtCard title={owedLabel} />
                         <DebtCard title={oweLabel} />
