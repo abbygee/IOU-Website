@@ -4,6 +4,7 @@ const cors = require('cors')
 
 const user = require("./routes/user");
 const dashboard = require("./routes/dashboard");
+const group = require("./routes/group");
 
 // Initiate Mongo Server
 const InitiateMongoServer = require("./config/db");
@@ -33,6 +34,12 @@ app.use("/user", user);
  * Router - /dashboard/*
  */
 app.use("/dashboard", dashboard);
+
+/**
+ * Router Middleware
+ * Router - /dashboard/*
+ */
+ app.use("/group", group);
 
 app.listen(PORT, (req, res) => {
   console.log(`Server Started at PORT ${PORT}`);

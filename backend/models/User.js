@@ -14,7 +14,7 @@ const UserSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  // contains usernames of people in your group INCLUDING YOU
+  // contains group objects 
   myGroup: {
     type: Array,
     required: true,

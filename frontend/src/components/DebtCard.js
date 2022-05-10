@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Text, Flex } from '@chakra-ui/react'
 
 const Debt = (props) => {
-    let price = 10.00
+    let price = props.amt
     let title = props.title
 
     return(

@@ -40,7 +40,6 @@ const Login = () => {
 
 		if (data.user) {
 			localStorage.setItem('token', data.user)
-			// alert('Login successful')
 			window.location.href = '/dashboard'
 		} else {
 			alert('Please check your username and password')
@@ -48,109 +47,102 @@ const Login = () => {
 	}
 
     return (
-        <Box>
-        <NavBar />
-        <Box 
-        h="100%"
-        position="fixed"
-        w="100%"
-        background="linear-gradient(134.89deg, #D86FCC 0.46%, #01055B 100.26%)"
-        >
-            {/* <Header /> */}
-            <Flex
-                align="center"
-                direction="column"
-                justify='space-evenly'
-                mr="30%"
-                ml="30%"
-                mt="5%"
-                gap="10px"
+        <>
+            <NavBar />
+            <Box 
+            h="100%"
+            position="fixed"
+            w="100%"
+            background="linear-gradient(134.89deg, #D86FCC 0.46%, #01055B 100.26%)"
             >
-                <Heading color="white" size='4xl'>Sign In</Heading>
-                <Spacer />
-                <Text w="50%" color="white" textAlign="center" fontSize='xl'>Sign in and start managing your group expenditures!</Text>
-                <Spacer />
-                <Spacer />
-                <Spacer />
-                <Box w="50%">
-                <form onSubmit={loginUser}>
-                    <FormControl isInvalid={isUsernameError}>
-                        <FormLabel htmlFor='username'></FormLabel>
-                        <InputGroup>
-                            <InputLeftElement
-                            pointerEvents='none'
-                            children={<AtSignIcon color='gray.300' />}
-                            />
-                            <Input
-                                id='username'
-                                type='username'
-                                value={username}
-                                onChange={handleUsernameChange}
-                                placeholder='Username'
-                                variant='filled'
-                                focusBorderColor='#e261ed'
-                                errorBorderColor='#CA41D6'
-                                _focus={{ bg: 'white' }}
-                            />
-                        </InputGroup>
-            
-                        {!isUsernameError ? (
-                            // <FormHelperText color="white">
-                            // Enter a unique username.
-                            // </FormHelperText>
-                            console.log("hey")
-                        ) : (
-                            <FormErrorMessage color="#e261ed">A username is required.</FormErrorMessage>
-                        )}
-                    </FormControl>
-                    <FormControl isInvalid={isPassError}>
-                        <FormLabel htmlFor='password'></FormLabel>
-                        <InputGroup>
-                            <InputLeftElement 
-                            pointerEvents='none'
-                            children={<LockIcon color='gray.300' />}
-                            />
-                            <Input
-                                id='password'
-                                type='password'
-                                value={password}
-                                onChange={handlePasswordChange}
-                                placeholder='Password'
-                                variant='filled'
-                                focusBorderColor='#e261ed'
-                                errorBorderColor='#CA41D6'
-                                _focus={{ bg: 'white' }}
-                            />
-                        </InputGroup>
-                        
-                        {!isPassError ? (
-                            console.log("heii")
-                        ) : (
-                            <FormErrorMessage color="#e261ed">A password is required.</FormErrorMessage>
-                        )}
-                    </FormControl>
-              
-                    <Button color="white" type="submit" bg='#CA41D6' size='lg' _hover={{ bg: '#e261ed' }} width="full" mt={4}>
-                        LOGIN
+                {/* <Header /> */}
+                <Flex
+                    align="center"
+                    direction="column"
+                    justify='space-evenly'
+                    mr="30%"
+                    ml="30%"
+                    mt="5%"
+                    gap="10px"
+                >
+                    <Heading color="white" size='4xl'>Sign In</Heading>
+                    <Spacer />
+                    <Text w="50%" color="white" textAlign="center" fontSize='xl'>Sign in and start managing your group expenditures!</Text>
+                    <Spacer />
+                    <Spacer />
+                    <Spacer />
+                    <Box w="50%">
+                    <form onSubmit={loginUser}>
+                        <FormControl isInvalid={isUsernameError}>
+                            <FormLabel htmlFor='username'></FormLabel>
+                            <InputGroup>
+                                <InputLeftElement
+                                pointerEvents='none'
+                                children={<AtSignIcon color='gray.300' />}
+                                />
+                                <Input
+                                    id='username'
+                                    type='username'
+                                    value={username}
+                                    onChange={handleUsernameChange}
+                                    placeholder='Username'
+                                    variant='filled'
+                                    focusBorderColor='#e261ed'
+                                    errorBorderColor='#CA41D6'
+                                    _focus={{ bg: 'white' }}
+                                />
+                            </InputGroup>
+                
+                            {!isUsernameError ? (
+                                console.log("hey")
+                            ) : (
+                                <FormErrorMessage color="#e261ed">A username is required.</FormErrorMessage>
+                            )}
+                        </FormControl>
+                        <FormControl isInvalid={isPassError}>
+                            <FormLabel htmlFor='password'></FormLabel>
+                            <InputGroup>
+                                <InputLeftElement 
+                                pointerEvents='none'
+                                children={<LockIcon color='gray.300' />}
+                                />
+                                <Input
+                                    id='password'
+                                    type='password'
+                                    value={password}
+                                    onChange={handlePasswordChange}
+                                    placeholder='Password'
+                                    variant='filled'
+                                    focusBorderColor='#e261ed'
+                                    errorBorderColor='#CA41D6'
+                                    _focus={{ bg: 'white' }}
+                                />
+                            </InputGroup>
+                            
+                            {!isPassError ? (
+                                console.log("heii")
+                            ) : (
+                                <FormErrorMessage color="#e261ed">A password is required.</FormErrorMessage>
+                            )}
+                        </FormControl>
+                
+                        <Button color="white" type="submit" bg='#CA41D6' size='lg' _hover={{ bg: '#e261ed' }} width="full" mt={4}>
+                            LOGIN
+                        </Button>
+
+                    </form>
+                    </Box>
+                    <Spacer />
+                    <Spacer />
+                    <Heading w="50%" color="white" textAlign="center" size='sm'>
+                        Don't have an account yet?
+                    </Heading>
+                    <Button w="50%" color="white" type="submit" bg='#CA41D6' size='lg' _hover={{ bg: '#e261ed' }}>
+                            SIGN UP
                     </Button>
-
-                </form>
-                </Box>
-
-                <Spacer />
-                <Spacer />
-
-                <Heading w="50%" color="white" textAlign="center" size='sm'>
-                    Don't have an account yet?
-                </Heading>
-
-                <Button w="50%" color="white" type="submit" bg='#CA41D6' size='lg' _hover={{ bg: '#e261ed' }}>
-                        SIGN UP
-                </Button>   
-
-            </Flex>
-        </Box>
-        </Box>
+                </Flex>
+            </Box>
+        </>
     );
 }
 

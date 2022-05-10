@@ -4,6 +4,9 @@ const jwt = require("jsonwebtoken");
 const router = express.Router();
 
 const User = require("../models/User");
+const Group = require("../models/Group");
+
+const secretKey = 'secret123'
 
 /**
  * @method - POST
@@ -27,11 +30,17 @@ router.post(
       const salt = await bcrypt.genSalt(10);
       const protectedPassword = await bcrypt.hash(password, salt);
 
+      // does this work hmmm
+      let newGroup = await Group.create({
+        members: [username],
+        items: [],
+      })
+
       await User.create({
         username: username,
         password: protectedPassword,
         displayName: displayName,
-        myGroup: [username]
+        myGroup: [newGroup]
       })
 
       console.log("good job! you registered")
@@ -101,6 +110,25 @@ router.post(
   } catch (e) {
       console.log(e)
       res.send({ status: 'error', message: 'no.' });
+  }
+});
+
+/**
+ * @method - GET
+ * @description - get current logged in username
+ * @param - /user/who-am-i
+ */
+ router.get('/who-am-i', async (req, res) => {
+  const token = req.headers['x-access-token']
+
+  try {
+      const decoded = jwt.verify(token, secretKey)
+      const username = decoded.username
+      
+      return res.json({status: 'ok', user: username});
+  } catch (e) {
+      console.log(e)
+      res.send({ status: 'error', message: 'invalid token' });
   }
 });
 

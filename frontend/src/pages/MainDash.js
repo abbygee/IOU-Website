@@ -26,7 +26,7 @@ const Dashboard = () => {
     const [group, setGroup] = useState([])
 
 	async function populateItems() {
-		const req = await fetch('http://localhost:4000/dashboard/items', {
+		const req = await fetch('http://localhost:4000/group/items', {
 			headers: {
 				'x-access-token': localStorage.getItem('token'),
 			},
@@ -36,6 +36,23 @@ const Dashboard = () => {
 
 		if (data.status === 'ok') {
 			setItems(data.items)
+		} else {
+			alert(data.message)
+		}
+	}
+
+    const [me, setMe] = useState('')
+    async function whoAmI() {
+		const req = await fetch('http://localhost:4000/user/who-am-i', {
+			headers: {
+				'x-access-token': localStorage.getItem('token'),
+			},
+		})
+
+		const data = await req.json()
+
+		if (data.status === 'ok') {
+			setMe(data.user)
 		} else {
 			alert(data.message)
 		}
@@ -56,20 +73,6 @@ const Dashboard = () => {
 			alert(data.message)
 		}
 	}
-
-	useEffect(() => {
-		const token = localStorage.getItem('token')
-		if (token) {
-			const user = decodeToken(token)
-			if (!user) {
-				localStorage.removeItem('token')
-				history('/login')
-			} else {
-				populateItems()
-                populateMembers()
-			}
-		}
-	})
 
     async function deleteItem(e) {
         e.preventDefault()
@@ -92,7 +95,7 @@ const Dashboard = () => {
         }
     }
 
-    const [cost, setCost] = useState(0.00)
+    const [expenditures, setExpenditures] = useState(0.00)
     async function getTotal() {
 		const req = await fetch('http://localhost:4000/dashboard/spent', {
 			headers: {
@@ -103,7 +106,41 @@ const Dashboard = () => {
 		const data = await req.json()
 
 		if (data.status === 'ok') {
-			setCost(data.total)
+			setExpenditures(data.total)
+		} else {
+			alert(data.message)
+		}
+	}
+
+    const [owes, setOwes] = useState(0.00)
+    async function getOwes() {
+		const req = await fetch('http://localhost:4000/group/owe-to-all', {
+			headers: {
+				'x-access-token': localStorage.getItem('token'),
+			},
+		})
+
+		const data = await req.json()
+
+		if (data.status === 'ok') {
+			setOwes(data.debt)
+		} else {
+			alert(data.message)
+		}
+	}
+
+    const [owed, setOwed] = useState(0.00)
+    async function getOwed() {
+		const req = await fetch('http://localhost:4000/group/owed-by-all', {
+			headers: {
+				'x-access-token': localStorage.getItem('token'),
+			},
+		})
+
+		const data = await req.json()
+
+		if (data.status === 'ok') {
+			setOwed(data.debt)
 		} else {
 			alert(data.message)
 		}
@@ -115,12 +152,17 @@ const Dashboard = () => {
 			const user = decodeToken(token)
 			if (!user) {
 				localStorage.removeItem('token')
+                history('/login')
 			} else {
 				getTotal()
+                getOwes()
+                getOwed()
+                populateItems()
+                populateMembers()
+                whoAmI()
 			}
 		}
 	})
-
 
     const listItems = items.map(item => 
         <Tr>
@@ -210,11 +252,12 @@ const Dashboard = () => {
                                 </Button>    
                             </Link>
                         </Flex> */}
+                        <Text>{me} is logged in! :D</Text>
 
-                        <CreditCard cost={cost}/>
+                        <CreditCard cost={expenditures}/>
 
-                        <DebtCard title={owedLabel} />
-                        <DebtCard title={oweLabel} />
+                        <DebtCard title={owedLabel} amt={owed}/>
+                        <DebtCard title={oweLabel} amt={owes}/>
                     </Box>
                 </Flex>
                 
