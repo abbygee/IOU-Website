@@ -4,7 +4,7 @@ import {
     Box, Flex, Spacer,
     FormControl, FormLabel, FormErrorMessage,
     Input,
-    Button,
+    Button, Link,
     Heading, Text,
     InputLeftElement, InputGroup,
   } from '@chakra-ui/react'
@@ -40,6 +40,7 @@ const Login = () => {
 
 		if (data.user) {
 			localStorage.setItem('token', data.user)
+            // TODO: Difference betweeen this and history with useNavigation?
 			window.location.href = '/dashboard'
 		} else {
 			alert('Please check your username and password')
@@ -137,9 +138,12 @@ const Login = () => {
                     <Heading w="50%" color="white" textAlign="center" size='sm'>
                         Don't have an account yet?
                     </Heading>
-                    <Button w="50%" color="white" type="submit" bg='#CA41D6' size='lg' _hover={{ bg: '#e261ed' }}>
-                            SIGN UP
-                    </Button>
+                    
+                    <Link href="/register">
+                        <Button color="white" bg='#CA41D6' size='lg' _hover={{ bg: '#e261ed' }}>
+                                SIGN UP
+                        </Button>
+                    </Link> 
                 </Flex>
             </Box>
         </>

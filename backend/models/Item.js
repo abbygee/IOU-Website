@@ -24,6 +24,10 @@ const ItemSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  id: {
+    type: String,
+    required: false,
+  },
 }, {collection: 'itemCollection'});
 // peoples should be an array of users that the purchaser wants to share cost with
 

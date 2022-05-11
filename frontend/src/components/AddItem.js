@@ -1,5 +1,6 @@
 import { React, useState, useEffect } from 'react';
 import { decodeToken } from "react-jwt";
+import { useNavigate } from 'react-router-dom'
 
 import {
     Drawer, DrawerBody, DrawerFooter, DrawerHeader, DrawerContent, DrawerCloseButton,
@@ -14,6 +15,7 @@ import {
   } from '@chakra-ui/react'
 
 const AddItem = (props) => {
+    const history = useNavigate()
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     const [group, setGroup] = useState([])
@@ -29,7 +31,8 @@ const AddItem = (props) => {
       if (data.status === 'ok') {
         setGroup(data.group)
       } else {
-        alert(data.message)
+        history('/login')
+        // alert(data.message)
       }
     }
 
@@ -54,7 +57,7 @@ const AddItem = (props) => {
     const handleItemName = (e) => setName(e.target.value)
     const handlePrice = (e) => setPrice(e.target.value)
     
-    //need to be async?
+    //TODO: does this need to be async?
     async function handlePeoples(e) {
       const isChecked = e.target.checked
       const newUser =  e.target.value // a username btw
@@ -96,13 +99,15 @@ const AddItem = (props) => {
   
       const data = await req.json()
       if (data.status === 'ok') {
+        // console.log(data.id)
         setName('')
         setPrice(0.00)
         setPeoples([])
         console.log("succesfully added item!")
         onClose()
       } else {
-        alert(data.error)
+        history('/login')
+        // alert(data.error)
       }
     }
 

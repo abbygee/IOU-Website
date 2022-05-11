@@ -67,8 +67,17 @@ router.get('/items', async (req, res) => {
         const decoded = jwt.verify(token, secretKey)
         const username = decoded.username
         const user = await User.findOne({ username: username });
-        
-        return res.json({status: 'ok', group: user.myGroup[0].members});
+        const group = user.myGroup[0].members
+
+        // let displays = [];
+        // for (const i of group) {
+        //     let currUser = await User.findOne({ username: group[i] })
+        //     displays.push(currUser.displayName)
+        // }
+
+        // groupDisplays: displays
+
+        return res.json({status: 'ok', group: group});
     } catch (e) {
         console.log(e)
         res.send({ status: 'error', message: 'invalid token' });
@@ -134,7 +143,10 @@ router.get('/items', async (req, res) => {
             boughtByDisplay: user.displayName,
             boughtByUser: user.username,
         })
-        
+
+        newItem.id = newItem._id
+        await newItem.save()
+
         currentItems = user.myItems;
         currentItems.push(newItem);
         user.myItems = await currentItems;
@@ -153,17 +165,16 @@ router.get('/items', async (req, res) => {
 
         await user.save();
 
-        res.json({status: 'ok', items: user.myItems, groupItems: user.myGroup[0].items});
+        res.json({status: 'ok', items: user.myItems, groupItems: user.myGroup[0].items, id: newItem._id});
     } catch (e) {
         console.log(e)
         res.send({ status: 'error', message: 'invalid token' });
     }
 });
 
-// TODO: check this method with new group object
 /**
  * @method - DELETE
- * @description - Delete item from myItems
+ * @description - Delete item from myItems/group Items
  * @param - /dashboard/delete
  */
  router.delete('/delete', async (req, res) => {
@@ -173,13 +184,50 @@ router.get('/items', async (req, res) => {
         const decoded = jwt.verify(token, secretKey)
         const username = decoded.username
         const user = await User.findOne({ username: username });
+        const itemID = req.body.id;
 
-        currentlist = user.myItems;
-        currentlist.pop() // just deletes last item btw and only deletes from currently signed in users myItems
-        
-        user.myItems = await currentlist;
+        let currentItems = user.myItems;
+
+        for (const i in currentItems) {
+            // console.log(currentItems[i].id)
+            // console.log(itemID)
+            if (currentItems[i].id === itemID) {
+                // console.log("same id found in own items")
+                if (currentItems[i].boughtByUser === username) {
+                    currentItems.splice(i, 1);
+                    break
+                } else {
+                    return res.send({ status: 'error', message: "cannot delete another user's items" });
+                }
+            }
+        }
+        user.myItems = await currentItems;
         await user.save();
-        res.json({status: 'ok', items: user.myItems});
+
+        // new after group model
+        currentGroupItems = await user.myGroup[0].items
+
+        for (const j in currentGroupItems) {
+            if (currentGroupItems[j].id === itemID) {
+                // console.log("same id found in group items")
+                if (currentGroupItems[j].boughtByUser === username) {
+                    currentGroupItems.splice(j, 1);
+                    break
+                } else {
+                    return res.send({ status: 'error', message: "cannot delete another user's items" });
+                }
+            }
+        }
+        let group = user.myGroup[0].members
+
+        for (const k in group) {
+            let currUser = await User.findOne({ username: group[k] })
+            currUser.myGroup[0].items = await currentGroupItems;
+            currUser.markModified('myGroup');
+            await currUser.save();
+        }
+
+        res.json({status: 'ok', items: user.myItems, groupItems: user.myGroup[0].items});
     } catch (e) {
         console.log(e)
         res.send({ status: 'error', message: 'invalid token' });

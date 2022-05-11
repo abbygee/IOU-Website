@@ -6,7 +6,7 @@ import {
     FormControl, FormLabel, FormErrorMessage, FormHelperText,
     Input,
     Button, 
-    Heading, Text,
+    Heading, Text, Link,
     InputLeftElement, InputGroup, 
   } from '@chakra-ui/react'
 import { AtSignIcon, LockIcon } from '@chakra-ui/icons'
@@ -60,7 +60,8 @@ const Register = () => {
             <NavBar />
             <Box 
             h="100%"
-            position="fixed"
+            pt="1vh"
+            pb="10vh"
             w="100%"
             background="linear-gradient(134.89deg, #D86FCC 0.46%, #01055B 100.26%)"
             >
@@ -181,9 +182,12 @@ const Register = () => {
                     <Heading w="50%" color="white" textAlign="center" size='sm'>
                         Already have an account?
                     </Heading>
-                    <Button w="50%" color="white" type="submit" bg='#CA41D6' size='lg' _hover={{ bg: '#e261ed' }}>
-                            LOGIN
-                    </Button>   
+                    <Link href="/login">
+                        <Button color="white" bg='#CA41D6' size='lg' _hover={{ bg: '#e261ed' }}>
+                                LOGIN
+                        </Button>
+                    </Link>
+                    
                 </Flex>
             </Box>
         </>
