@@ -83,6 +83,11 @@ const AddItem = (props) => {
     
     async function addItem(e) {
       e.preventDefault()
+
+      if (peoples.length === 0 || name === '' || price === 0.00) {
+        alert("Please check you've filled out all forms and resubmit :)")
+        return
+      }
   
       const req = await fetch('http://localhost:4000/dashboard/add', {
         method: 'POST',
@@ -99,15 +104,14 @@ const AddItem = (props) => {
   
       const data = await req.json()
       if (data.status === 'ok') {
-        // console.log(data.id)
         setName('')
         setPrice(0.00)
         setPeoples([])
         console.log("succesfully added item!")
         onClose()
       } else {
-        history('/login')
-        // alert(data.error)
+        // history('/login')
+        alert(data.message)
       }
     }
 

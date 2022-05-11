@@ -11,16 +11,17 @@ const Debt = (props) => {
         color="white"
         h="fit-content"
         bg="rgba(255, 255, 255, 0.1)" 
-        mb="7%"
+        // zw='auto'
+        {...props}
         >
             
             <Flex align='center' direction="column" justify="space-between">
 
-                <Box w='100%' bg="#CA41D6">
+                <Box w='100%' bg="#CA41D6" pl='1%' pr='1%' minWidth='max-content'>
                     <Text fontSize='lg' align="center">{title}</Text>
                 </Box>
 
-                <Box mt='5%' mb='5%'>   
+                <Box pt={["5%","5%","3%","5%"]} pb={["5%","5%","3%","5%"]}>   
                     <Text fontSize='3xl'>${price}</Text>
                 </Box>
                 

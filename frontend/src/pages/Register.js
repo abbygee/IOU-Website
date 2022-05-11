@@ -59,10 +59,11 @@ const Register = () => {
         <>
             <NavBar />
             <Box 
-            h="100%"
             pt="1vh"
             pb="10vh"
             w="100%"
+            height='100%'
+            overflow='hidden'
             background="linear-gradient(134.89deg, #D86FCC 0.46%, #01055B 100.26%)"
             >
                 {/* <Header /> */}
@@ -70,8 +71,8 @@ const Register = () => {
                     align="center"
                     direction="column"
                     justify='space-evenly'
-                    mr="30%"
-                    ml="30%"
+                    mr={["0%","5%","30%","30%"]}
+                    ml={["0%","5%","30%","30%"]}
                     mt="4%"
                     gap="10px"
                 >

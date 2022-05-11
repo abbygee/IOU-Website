@@ -61,8 +61,8 @@ const Login = () => {
                     align="center"
                     direction="column"
                     justify='space-evenly'
-                    mr="30%"
-                    ml="30%"
+                    mr={["0%","5%","30%","30%"]}
+                    ml={["0%","5%","30%","30%"]}
                     mt="5%"
                     gap="10px"
                 >

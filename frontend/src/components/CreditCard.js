@@ -10,12 +10,14 @@ const Debt = (props) => {
         bg="linear-gradient(177.23deg, #F32CC7 -13.49%, #3A49F9 109.75%)"
         borderRadius='30px'
         color="white"
-        w="100%"
+        w={["90%","90%","45%","100%"]}
         h='210px'
         direction="row"
         justify="space-between"
-        p="7%"
-        mb="7%"
+        p={["7%","3%","3%","7%"]}
+        m={["auto","auto","0%","auto"]}
+        mb={["7%","7%","3%","7%"]}
+        mt={["0%","0%","3%","0%"]}
         >
             {/* Left Column */}
             <Box w='fit-content'>

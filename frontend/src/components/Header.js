@@ -37,7 +37,8 @@ const Header = (props) => {
         wrap="wrap"
         w="100%"
         p={6}
-        bg={['red', "#2B3699", "#2B3699", "white"]}
+        // TODO: do we want a contrasted navbar?
+        bg={['#2B3699', "#2B3699", "#2B3699", "white"]}
         color={["white", "white", "white", "black"]}
         {...props}
       >
@@ -95,9 +96,9 @@ const Header = (props) => {
         justify="space-between"
         wrap="wrap"
         w="100%"
-      //   mb={8}
         p={6}
-        bg={['red', "#2B3699", "#2B3699", "white"]}
+        // TODO: do we want a contrasted navbar?
+        bg={['#2B3699', "#2B3699", "#2B3699", "white"]}
         color={["white", "white", "white", "black"]}
         {...props}
       >
@@ -147,8 +148,6 @@ const Header = (props) => {
       </Flex>
     );
   }
-
-  
 };
 
 export default Header;
