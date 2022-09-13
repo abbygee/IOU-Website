@@ -44,7 +44,7 @@ const HomePage = () => {
             position="fixed"
             // mt={["5%","2%","2%","2%"]}
           >
-            TODO: position fixed to fill rest of viewport
+            {/* TODO: position fixed to fill rest of viewport */}
           </Box>
         </Box>
         
